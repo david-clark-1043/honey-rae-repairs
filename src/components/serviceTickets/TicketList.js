@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from "react"
+import { useHistory } from "react-router-dom"
+import "./Tickets.css";
 
 const API = "http://localhost:8088"
 
@@ -17,19 +19,23 @@ export const TicketList = () => {
         []
     )
 
+    const history = useHistory()
 
     return (
         <>
-        <div>{totalTicketMessage}</div>
-        {
-            tickets.map(
-                (ticketObject) => {
-                    return <p key={`ticket--${ticketObject.id}`}>
-                        {ticketObject.description} submitted by {ticketObject.customer.name} worked on by {ticketObject.employee.name}
-                        </p>
-                }
-            )
-        }
+            <div>
+                <button onClick={() => history.push("/tickets/create")}>Create Ticket</button>
+            </div>
+            <div>{totalTicketMessage}</div>
+            {
+                tickets.map(
+                    (ticket) => {
+                        return <p key={`ticket--${ticket.id}`} className={`ticket ${ticket.emergency ? "emergency" : ""}`}>
+                        {ticket.emergency ? "🚑" : ""} {ticket.description} submitted by {ticket.customer.name} and worked on by {ticket.employee.name}
+                    </p>
+                    }
+                )
+            }
         </>
     )
 }
