@@ -4,10 +4,6 @@ import { useHistory } from "react-router-dom";
 export const EmployeeForm = () => {
     const [employee, updateEmployee] = useState();
 
-    const saveEmployee = (event) => {
-        event.preventDefault()
-    }
-
     const history = useHistory()
 
     const submitEmployee = (evt) => {

@@ -4,10 +4,6 @@ import { useHistory } from "react-router-dom";
 export const TicketForm = () => {
     const [ticket, updateTicket] = useState();
 
-    const saveTicket = (event) => {
-        event.preventDefault()
-    }
-
     const history = useHistory()
 
     const submitTicket = (evt) => {

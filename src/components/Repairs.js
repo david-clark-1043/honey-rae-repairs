@@ -13,6 +13,7 @@ export const Repairs = () => (
         if (localStorage.getItem("honey_customer")) {
           return (
             <>
+              <h1>Honey Rae's Repairs</h1>
               <NavBar />
               <ApplicationViews />
             </>
