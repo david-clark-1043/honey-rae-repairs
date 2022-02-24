@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Link, useHistory } from "react-router-dom";
+import { deleteTicket, fetchTickets } from "../ApiManager";
 import "./Tickets.css";
 
 const API = "http://localhost:8088"
@@ -7,32 +8,22 @@ const API = "http://localhost:8088"
 export const TicketList = () => {
     const [tickets, setTickets] = useState([])
 
-
-    const fetchTickets = () => {
-        return fetch(`${API}/serviceTickets?_expand=employee&_expand=customer`)
-            .then(res => res.json())
+    useEffect(
+        () => {
+            fetchTickets()
             .then((ticketArray) => {
                 setTickets(ticketArray)
             })
-    }
-
-    useEffect(
-        fetchTickets,
-        // () => {
-        //     fetch(`${API}/serviceTickets?_expand=employee&_expand=customer`)
-        //         .then(res => res.json())
-        //         .then((ticketArray) => {
-        //             setTickets(ticketArray)
-        //         })
-        // },
+        },
         []
     )
 
-    const deleteTicket = (id) => {
-        fetch(`http://localhost:8088/serviceTickets/${id}`, {
-            method: "DELETE"
-        })
+    const removeTicket = (ticketId) => {
+        return deleteTicket(ticketId)
             .then(fetchTickets)
+            .then((ticketArray) => {
+                setTickets(ticketArray)
+            })
     }
 
     const history = useHistory()
@@ -52,7 +43,7 @@ export const TicketList = () => {
                                 <button
                                     key={`deleteTicket--${ticket.id}`}
                                     onClick={() => {
-                                        deleteTicket(ticket.id)
+                                        removeTicket(ticket.id)
                                     }}>
                                     Delete
                                 </button>

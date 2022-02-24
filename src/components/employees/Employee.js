@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react"
 import { useParams } from "react-router-dom"
+import { getEmployee } from "../ApiManager"
 
 export const Employee = () => {
     const [employee, set] = useState({})  // State variable for current employee object
@@ -7,8 +8,7 @@ export const Employee = () => {
 
     useEffect(
         () => {
-            fetch(`http://localhost:8088/employees/${employeeId}`)
-                .then(res => res.json())
+            getEmployee(employeeId)
                 .then(set)
         },
         [ employeeId ]  // Above function runs when the value of employeeId change

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react"
-
+import { getAllCustomers } from "../ApiManager"
 const API = "http://localhost:8088"
 
 export const CustomerList = () => {
@@ -8,8 +8,7 @@ export const CustomerList = () => {
 
     useEffect(
         () => {
-            fetch(`${API}/customers`)
-                .then(res => res.json())
+            getAllCustomers()
                 .then((customerArray) => {
                     setCustomers(customerArray)
                 })

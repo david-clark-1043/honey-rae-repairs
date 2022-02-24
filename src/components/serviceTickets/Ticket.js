@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react"
 import { useHistory } from "react-router-dom"
 import { useParams } from "react-router-dom"
+import { assignTicket, getEmployees, getTicket } from "../ApiManager"
 
 export const Ticket = () => {
     const [ticket, set] = useState({})  // State variable for current ticket object
@@ -11,18 +12,16 @@ export const Ticket = () => {
 
     useEffect(
         () => {
-            fetch(`http://localhost:8088/serviceTickets/${ticketId}?_expand=customer&_expand=employee`)
-                .then(res => res.json())
+            getTicket(ticketId)
                 .then(set)
         },
-        [ ticketId ]  // Above function runs when the value of ticketId change
+        [ticketId]  // Above function runs when the value of ticketId change
     )
-    
+
 
     useEffect(
         () => {
-            return fetch("http://localhost:8088/employees")
-                .then(res => res.json())
+            getEmployees()
                 .then((data) => {
                     setEmployees(data)
                 })
@@ -30,10 +29,10 @@ export const Ticket = () => {
         []
     )
 
-    
+
 
     const assignEmployee = (changeEvent) => {
-        
+
         const newTicket = {
             description: ticket.description,
             emergency: ticket.emergency,
@@ -44,19 +43,13 @@ export const Ticket = () => {
 
         //set(newTicket)
 
-        return fetch(`http://localhost:8088/serviceTickets/${ticketId}`, {
-            method: "PUT",
-            headers: {
-                "Content-type": "application/json"
-            },
-            body: JSON.stringify(newTicket)
-        })
-            .then(res => res.json())
+        return assignTicket(ticketId, newTicket)
             .then(() => {
-                fetch(`http://localhost:8088/serviceTickets/${ticketId}?_expand=customer&_expand=employee`)
-                    .then(res => res.json())
+                getTicket(ticketId)
                     .then(set)
-                //history.push("/tickets")
+                    // .then( () => {
+                    //     history.push("/tickets")
+                    // })
             })
     }
 
@@ -66,17 +59,17 @@ export const Ticket = () => {
                 <h3 className="ticket__description">{ticket.description}</h3>
                 <div className="ticket__customer">Submitted by {ticket.customer?.name}</div>
                 <div className="ticket__employee">
-                <select
-                        value={ ticket.employeeId }
-                        onChange={ assignEmployee }>
-                    {/* <option value="0" hidden>Select Employee</option> */}
-                    {
-                        employees.map(
-                            (employee) => {
-                                return <option key={`employee--${employee.id}`} value={employee.id}>{employee.name}</option>
-                            }
-                        )
-                    }    
+                    <select
+                        value={ticket.employeeId}
+                        onChange={assignEmployee}>
+                        {/* <option value="0" hidden>Select Employee</option> */}
+                        {
+                            employees.map(
+                                (employee) => {
+                                    return <option key={`employee--${employee.id}`} value={employee.id}>{employee.name}</option>
+                                }
+                            )
+                        }
                     </select>
                 </div>
             </section>
